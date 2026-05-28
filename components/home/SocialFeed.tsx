@@ -1,11 +1,13 @@
 'use client'
 
+import Image from 'next/image'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Heart, MessageCircle, Play, ExternalLink, Maximize2 } from 'lucide-react'
 import type { SocialPost } from '@/types'
 import { truncate } from '@/lib/utils'
 import { PostViewerModal } from '@/components/social/PostViewerModal'
+import { localMedia } from '@/lib/localMedia'
 
 interface SocialFeedProps {
   galleryPosts?: SocialPost[]
@@ -26,13 +28,15 @@ function PostCard({ post, onClick }: { post: SocialPost; onClick: (p: SocialPost
       className="relative group overflow-hidden bg-sand block cursor-pointer"
     >
       <div className="aspect-square relative">
-        <img
+        <Image
           src={post.media_url}
           alt={post.caption || 'Social post'}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          fill
+          sizes="(min-width: 768px) 25vw, 50vw"
+          className="object-cover transition-transform duration-700 group-hover:scale-110"
           onError={(e) => {
-            // Fallback if media_url fails to load
-            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1544413660-299165566b1d?auto=format&fit=crop&q=80&w=400'
+            const image = e.target as HTMLImageElement
+            image.src = localMedia.hero.background
           }}
         />
 
@@ -97,24 +101,24 @@ function PostCard({ post, onClick }: { post: SocialPost; onClick: (p: SocialPost
 }
 
 const PLACEHOLDER_GALLERY: SocialPost[] = [
-  { id: '1', platform: 'instagram', account_handle: 'gegallery85', external_id: 'p1', media_url: 'https://images.unsplash.com/photo-1544413660-299165566b1d?auto=format&fit=crop&q=80&w=400', caption: 'Gallery opening this Friday — join us for an evening of art. 🎨', likes_count: 342, comments_count: 28, views_count: 0, permalink: 'https://www.instagram.com/gegallery85', is_visible: true, is_featured: true, fetched_at: '' },
-  { id: '2', platform: 'instagram', account_handle: 'gegallery85', external_id: 'p2', media_url: 'https://images.unsplash.com/photo-1518998053401-b4391cb169cd?auto=format&fit=crop&q=80&w=400', caption: 'New acquisition just arrived.', likes_count: 289, comments_count: 15, views_count: 0, permalink: 'https://www.instagram.com/gegallery85', is_visible: true, is_featured: false, fetched_at: '' },
-  { id: '3', platform: 'instagram', account_handle: 'gegallery85', external_id: 'p3', media_url: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=400', caption: 'Behind the scenes at our latest installation.', likes_count: 412, comments_count: 33, views_count: 0, permalink: 'https://www.instagram.com/gegallery85', is_visible: true, is_featured: false, fetched_at: '' },
-  { id: '4', platform: 'instagram', account_handle: 'gegallery85', external_id: 'p4', media_url: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&q=80&w=400', caption: 'Opening night was incredible.', likes_count: 521, comments_count: 41, views_count: 0, permalink: 'https://www.instagram.com/gegallery85', is_visible: true, is_featured: false, fetched_at: '' },
+  { id: '1', platform: 'instagram', account_handle: 'gegallery85', external_id: 'p1', media_url: localMedia.social.galleryInstagram[0], caption: 'Gallery opening this Friday — join us for an evening of art.', likes_count: 342, comments_count: 28, views_count: 0, permalink: 'https://www.instagram.com/gegallery85', is_visible: true, is_featured: true, fetched_at: '' },
+  { id: '2', platform: 'instagram', account_handle: 'gegallery85', external_id: 'p2', media_url: localMedia.social.galleryInstagram[1], caption: 'New acquisition just arrived.', likes_count: 289, comments_count: 15, views_count: 0, permalink: 'https://www.instagram.com/gegallery85', is_visible: true, is_featured: false, fetched_at: '' },
+  { id: '3', platform: 'instagram', account_handle: 'gegallery85', external_id: 'p3', media_url: localMedia.social.galleryInstagram[2], caption: 'Behind the scenes at our latest installation.', likes_count: 412, comments_count: 33, views_count: 0, permalink: 'https://www.instagram.com/gegallery85', is_visible: true, is_featured: false, fetched_at: '' },
+  { id: '4', platform: 'instagram', account_handle: 'gegallery85', external_id: 'p4', media_url: localMedia.social.galleryInstagram[3], caption: 'Opening night was incredible.', likes_count: 521, comments_count: 41, views_count: 0, permalink: 'https://www.instagram.com/gegallery85', is_visible: true, is_featured: false, fetched_at: '' },
 ]
 
 const PLACEHOLDER_ARTIST: SocialPost[] = [
-  { id: '5', platform: 'instagram', account_handle: 'thandazanindlovuartist', external_id: 'a1', media_url: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=400', caption: 'Studio session — working on the new series. 🖌️', likes_count: 567, comments_count: 44, views_count: 0, permalink: 'https://www.instagram.com/thandazanindlovuartist', is_visible: true, is_featured: true, fetched_at: '' },
-  { id: '6', platform: 'instagram', account_handle: 'thandazanindlovuartist', external_id: 'a2', media_url: 'https://images.unsplash.com/photo-1578301978693-85fa9c026f19?auto=format&fit=crop&q=80&w=400', caption: '"Echoes of the Ancestors" — detail shot. Available at @gegallery85', likes_count: 892, comments_count: 71, views_count: 0, permalink: 'https://www.instagram.com/thandazanindlovuartist', is_visible: true, is_featured: false, fetched_at: '' },
-  { id: '7', platform: 'instagram', account_handle: 'thandazanindlovuartist', external_id: 'a3', media_url: 'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?auto=format&fit=crop&q=80&w=400', caption: 'Process always tells the story.', likes_count: 634, comments_count: 52, views_count: 0, permalink: 'https://www.instagram.com/thandazanindlovuartist', is_visible: true, is_featured: false, fetched_at: '' },
-  { id: '8', platform: 'instagram', account_handle: 'thandazanindlovuartist', external_id: 'a4', media_url: 'https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?auto=format&fit=crop&q=80&w=400', caption: 'New canvas, new story.', likes_count: 445, comments_count: 38, views_count: 0, permalink: 'https://www.instagram.com/thandazanindlovuartist', is_visible: true, is_featured: false, fetched_at: '' },
+  { id: '5', platform: 'instagram', account_handle: 'thandazanindlovuartist', external_id: 'a1', media_url: localMedia.social.artistInstagram[0], caption: 'Studio session — working on the new series.', likes_count: 567, comments_count: 44, views_count: 0, permalink: 'https://www.instagram.com/thandazanindlovuartist', is_visible: true, is_featured: true, fetched_at: '' },
+  { id: '6', platform: 'instagram', account_handle: 'thandazanindlovuartist', external_id: 'a2', media_url: localMedia.social.artistInstagram[1], caption: '"Echoes of the Ancestors" — detail shot. Available at @gegallery85', likes_count: 892, comments_count: 71, views_count: 0, permalink: 'https://www.instagram.com/thandazanindlovuartist', is_visible: true, is_featured: false, fetched_at: '' },
+  { id: '7', platform: 'instagram', account_handle: 'thandazanindlovuartist', external_id: 'a3', media_url: localMedia.social.artistInstagram[2], caption: 'Process always tells the story.', likes_count: 634, comments_count: 52, views_count: 0, permalink: 'https://www.instagram.com/thandazanindlovuartist', is_visible: true, is_featured: false, fetched_at: '' },
+  { id: '8', platform: 'instagram', account_handle: 'thandazanindlovuartist', external_id: 'a4', media_url: localMedia.social.artistInstagram[3], caption: 'New canvas, new story.', likes_count: 445, comments_count: 38, views_count: 0, permalink: 'https://www.instagram.com/thandazanindlovuartist', is_visible: true, is_featured: false, fetched_at: '' },
 ]
 
 const PLACEHOLDER_TIKTOK: SocialPost[] = [
-  { id: '9', platform: 'tiktok', account_handle: 'thandazanindlovuartist', external_id: 't1', media_url: 'https://images.unsplash.com/photo-1580136608260-4eb11f4b24fe?auto=format&fit=crop&q=80&w=400', caption: 'Watch me create this piece from start to finish 🎨 #AfricanArt', likes_count: 1240, comments_count: 89, views_count: 45200, permalink: 'https://www.tiktok.com/@thandazanindlovuartist', is_visible: true, is_featured: true, fetched_at: '' },
-  { id: '10', platform: 'tiktok', account_handle: 'thandazanindlovuartist', external_id: 't2', media_url: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&q=80&w=400', caption: 'The meaning behind my latest collection explained 🖌️', likes_count: 876, comments_count: 65, views_count: 32100, permalink: 'https://www.tiktok.com/@thandazanindlovuartist', is_visible: true, is_featured: false, fetched_at: '' },
-  { id: '11', platform: 'tiktok', account_handle: 'thandazanindlovuartist', external_id: 't3', media_url: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=400', caption: 'A tour of the new gallery space 🏛️', likes_count: 2100, comments_count: 134, views_count: 89000, permalink: 'https://www.tiktok.com/@thandazanindlovuartist', is_visible: true, is_featured: false, fetched_at: '' },
-  { id: '12', platform: 'tiktok', account_handle: 'thandazanindlovuartist', external_id: 't4', media_url: 'https://images.unsplash.com/photo-1544413660-299165566b1d?auto=format&fit=crop&q=80&w=400', caption: 'Oil painting techniques I learned from my grandmother', likes_count: 3450, comments_count: 201, views_count: 120000, permalink: 'https://www.tiktok.com/@thandazanindlovuartist', is_visible: true, is_featured: false, fetched_at: '' },
+  { id: '9', platform: 'tiktok', account_handle: 'thandazanindlovuartist', external_id: 't1', media_url: localMedia.social.tiktok[0], caption: 'Watch me create this piece from start to finish #AfricanArt', likes_count: 1240, comments_count: 89, views_count: 45200, permalink: 'https://www.tiktok.com/@thandazanindlovuartist', is_visible: true, is_featured: true, fetched_at: '' },
+  { id: '10', platform: 'tiktok', account_handle: 'thandazanindlovuartist', external_id: 't2', media_url: localMedia.social.tiktok[1], caption: 'The meaning behind my latest collection explained.', likes_count: 876, comments_count: 65, views_count: 32100, permalink: 'https://www.tiktok.com/@thandazanindlovuartist', is_visible: true, is_featured: false, fetched_at: '' },
+  { id: '11', platform: 'tiktok', account_handle: 'thandazanindlovuartist', external_id: 't3', media_url: localMedia.social.tiktok[2], caption: 'A tour of the new gallery space.', likes_count: 2100, comments_count: 134, views_count: 89000, permalink: 'https://www.tiktok.com/@thandazanindlovuartist', is_visible: true, is_featured: false, fetched_at: '' },
+  { id: '12', platform: 'tiktok', account_handle: 'thandazanindlovuartist', external_id: 't4', media_url: localMedia.social.tiktok[3], caption: 'Oil painting techniques I learned from my grandmother', likes_count: 3450, comments_count: 201, views_count: 120000, permalink: 'https://www.tiktok.com/@thandazanindlovuartist', is_visible: true, is_featured: false, fetched_at: '' },
 ]
 
 export function SocialFeed({ galleryPosts, artistPosts, tiktokPosts }: SocialFeedProps) {

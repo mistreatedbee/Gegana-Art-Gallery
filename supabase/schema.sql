@@ -168,7 +168,7 @@ CREATE TABLE IF NOT EXISTS homepage_settings (
   hero_title            TEXT DEFAULT 'GEGANA',
   hero_subtitle         TEXT DEFAULT 'GALLERY',
   hero_tagline          TEXT DEFAULT 'Curating African Art & Contemporary Expression',
-  hero_image_url        TEXT,
+  hero_image_url        TEXT DEFAULT '/abstract1.jpg',
   hero_image_public_id  TEXT,
   about_heading         TEXT DEFAULT 'Elevating African Contemporary Art',
   about_body            TEXT DEFAULT 'Founded in 2018, Gegana Gallery has established itself as a premier destination for contemporary African art in Johannesburg.',
@@ -252,7 +252,7 @@ VALUES (
   'thandazani-ndlovu',
   'Ndlovu''s work explores the intersection of traditional African mythology and modern urban existence. Through bold strokes and profound textures, he creates a visual language that speaks to identity, displacement, and spiritual grounding.',
   '"My canvas is a bridge between the ancestors we''ve forgotten and the futures we are yet to build."',
-  'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=1200',
+  '/thandazanindlovu.jpg',
   'https://www.instagram.com/thandazanindlovuartist',
   'https://www.tiktok.com/@thandazanindlovuartist',
   true,
@@ -261,15 +261,15 @@ VALUES (
 
 INSERT INTO artworks (title, artist, medium, size, year, category, price, availability, description, image_url, is_featured, sort_order)
 VALUES
-  ('Echoes of the Ancestors', 'Thandazani Ndlovu', 'Oil on Canvas', '120 x 90 cm', 2025, 'Paintings', 45000, 'Available', 'A deeply spiritual work exploring ancestral memory through layered oil paint and earthy tones.', 'https://images.unsplash.com/photo-1578301978693-85fa9c026f19?auto=format&fit=crop&q=80&w=800', true, 1),
-  ('Urban Rhythm', 'Thandazani Ndlovu', 'Mixed Media', '100 x 100 cm', 2024, 'Mixed Media', 38000, 'Available', 'An exploration of city life through overlapping textures and urban materials.', 'https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?auto=format&fit=crop&q=80&w=800', true, 2),
-  ('Silent Observer', 'Thandazani Ndlovu', 'Bronze Sculpture', '45 x 20 x 20 cm', 2026, 'Contemporary', NULL, 'Available', 'A minimalist bronze figure that speaks to quiet contemplation in a noisy world.', 'https://images.unsplash.com/photo-1580136608260-4eb11f4b24fe?auto=format&fit=crop&q=80&w=800', true, 3),
-  ('Abstract Landscapes II', 'Thandazani Ndlovu', 'Acrylic on Linen', '150 x 80 cm', 2025, 'Abstract', 52000, 'Reserved', 'Bold abstract forms inspired by the South African landscape.', 'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?auto=format&fit=crop&q=80&w=800', true, 4),
-  ('Midnight Sun', 'Thandazani Ndlovu', 'Oil on Canvas', '90 x 90 cm', 2024, 'Paintings', 42000, 'Sold', 'A meditation on duality — light and darkness in perpetual conversation.', 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=800', false, 5),
-  ('Golden Hour', 'Thandazani Ndlovu', 'Oil on Canvas', '80 x 60 cm', 2025, 'Paintings', 35000, 'Available', 'Capturing the magical light of an African sunset in bold, gestural strokes.', 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=600', false, 6),
-  ('Ancestral Lines', 'Thandazani Ndlovu', 'Pen and Ink', '60 x 80 cm', 2024, 'African Art', 28000, 'Available', 'Intricate line work drawing on traditional African geometric patterns.', 'https://images.unsplash.com/photo-1544413660-299165566b1d?auto=format&fit=crop&q=80&w=600', false, 7),
-  ('Urban Chaos', 'Thandazani Ndlovu', 'Mixed Media', '120 x 120 cm', 2025, 'Abstract', 58000, 'Available', 'The energy and disorder of urban African life rendered in abstract form.', 'https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?auto=format&fit=crop&q=80&w=600', false, 8),
-  ('The Gathering', 'Thandazani Ndlovu', 'Acrylic on Canvas', '200 x 150 cm', 2023, 'African Art', 75000, 'Sold', 'A monumental work depicting community, resilience, and shared identity.', 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&q=80&w=600', false, 9)
+  ('Echoes of the Ancestors', 'Thandazani Ndlovu', 'Oil on Canvas', '120 x 90 cm', 2025, 'Portraits', 45000, 'Available', 'A deeply spiritual work exploring ancestral memory through layered oil paint and earthy tones.', '/potrait1.jpg', true, 1),
+  ('Urban Rhythm', 'Thandazani Ndlovu', 'Mixed Media', '100 x 100 cm', 2024, 'Mixed Media', 38000, 'Available', 'An exploration of city life through overlapping textures and urban materials.', '/mixedmedia1.jpg', true, 2),
+  ('Silent Observer', 'Thandazani Ndlovu', 'Oil on Canvas', '45 x 60 cm', 2026, 'Portraits', NULL, 'Available', 'A contemplative portrait that speaks to quiet reflection in a noisy world.', '/potrait3.jpg', true, 3),
+  ('Abstract Landscapes II', 'Thandazani Ndlovu', 'Acrylic on Linen', '150 x 80 cm', 2025, 'Abstract', 52000, 'Reserved', 'Bold abstract forms inspired by the South African landscape.', '/abstract1.jpg', true, 4),
+  ('Midnight Sun', 'Thandazani Ndlovu', 'Mixed Media', '90 x 90 cm', 2024, 'Mixed Media', 42000, 'Sold', 'A meditation on duality — light and darkness in perpetual conversation.', '/mixedmedia3.jpg', false, 5),
+  ('Golden Hour', 'Thandazani Ndlovu', 'Oil on Canvas', '80 x 60 cm', 2025, 'Portraits', 35000, 'Available', 'Capturing the magical light of an African sunset in bold, gestural strokes.', '/potrait2.jpeg', false, 6),
+  ('Ancestral Lines', 'Thandazani Ndlovu', 'Pen and Ink', '60 x 80 cm', 2024, 'African Art', 28000, 'Available', 'Intricate line work drawing on traditional African geometric patterns.', '/africanart1.jpg', false, 7),
+  ('Urban Chaos', 'Thandazani Ndlovu', 'Mixed Media', '120 x 120 cm', 2025, 'Mixed Media', 58000, 'Available', 'The energy and disorder of urban African life rendered in abstract form.', '/mixedmedia4.jpg', false, 8),
+  ('The Gathering', 'Thandazani Ndlovu', 'Acrylic on Canvas', '200 x 150 cm', 2023, 'African Art', 75000, 'Sold', 'A monumental work depicting community, resilience, and shared identity.', '/africanart3.jpg', false, 9)
 ON CONFLICT DO NOTHING;
 
 INSERT INTO testimonials (quote, author, role, is_approved, sort_order)
@@ -281,20 +281,20 @@ ON CONFLICT DO NOTHING;
 
 INSERT INTO exhibitions (title, description, location, start_date, end_date, image_url, is_active, sort_order)
 VALUES
-  ('Voices of the Soil', 'A group exhibition exploring our deep connection to the earth through contemporary sculpture and mixed media.', 'Main Gallery, Johannesburg', '2026-10-15', '2026-11-30', 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&q=80&w=800', true, 1),
-  ('Thandazani Ndlovu: Retrospective', 'An immersive journey through a decade of Ndlovu''s groundbreaking work in abstract expressionism.', 'West Wing, Johannesburg', '2026-12-05', '2027-01-20', 'https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?auto=format&fit=crop&q=80&w=800', true, 2),
-  ('Urban Geometries', 'Emerging artists interpreting the modern African metropolis through stark lines and bold colors.', 'Project Space', '2027-02-01', '2027-03-15', 'https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?auto=format&fit=crop&q=80&w=800', true, 3)
+  ('Voices of the Soil', 'A group exhibition exploring our deep connection to the earth through contemporary sculpture and mixed media.', 'Main Gallery, Johannesburg', '2026-10-15', '2026-11-30', '/africanart3.jpg', true, 1),
+  ('Thandazani Ndlovu: Retrospective', 'An immersive journey through a decade of Ndlovu''s groundbreaking work in abstract expressionism.', 'West Wing, Johannesburg', '2026-12-05', '2027-01-20', '/potrait4.jpg', true, 2),
+  ('Urban Geometries', 'Emerging artists interpreting the modern African metropolis through stark lines and bold colors.', 'Project Space', '2027-02-01', '2027-03-15', '/abstract1.jpg', true, 3)
 ON CONFLICT DO NOTHING;
 
 -- Seed placeholder social posts
 INSERT INTO social_posts (platform, account_handle, external_id, media_url, caption, likes_count, comments_count, permalink, is_visible, is_featured)
 VALUES
-  ('instagram', 'gegallery85', 'placeholder_1', 'https://images.unsplash.com/photo-1544413660-299165566b1d?auto=format&fit=crop&q=80&w=400', 'Gallery opening this Friday — join us for an evening of art and conversation. 🎨', 342, 28, 'https://www.instagram.com/gegallery85', true, true),
-  ('instagram', 'gegallery85', 'placeholder_2', 'https://images.unsplash.com/photo-1518998053401-b4391cb169cd?auto=format&fit=crop&q=80&w=400', 'New acquisition just arrived. Contact us to enquire.', 289, 15, 'https://www.instagram.com/gegallery85', true, false),
-  ('instagram', 'gegallery85', 'placeholder_3', 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=400', 'Behind the scenes at our latest installation.', 412, 33, 'https://www.instagram.com/gegallery85', true, false),
-  ('instagram', 'thandazanindlovuartist', 'placeholder_4', 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=400', 'Studio session — working on the new series. 🖌️', 567, 44, 'https://www.instagram.com/thandazanindlovuartist', true, true),
-  ('instagram', 'thandazanindlovuartist', 'placeholder_5', 'https://images.unsplash.com/photo-1578301978693-85fa9c026f19?auto=format&fit=crop&q=80&w=400', '"Echoes of the Ancestors" — detail shot. Available at @gegallery85', 892, 71, 'https://www.instagram.com/thandazanindlovuartist', true, false),
-  ('instagram', 'thandazanindlovuartist', 'placeholder_6', 'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?auto=format&fit=crop&q=80&w=400', 'Process always tells the story. New work in progress.', 634, 52, 'https://www.instagram.com/thandazanindlovuartist', true, false),
-  ('tiktok', 'thandazanindlovuartist', 'placeholder_tiktok_1', 'https://images.unsplash.com/photo-1580136608260-4eb11f4b24fe?auto=format&fit=crop&q=80&w=400', 'Watch me create this piece from start to finish 🎨 #AfricanArt #ContemporaryArt', 1240, 89, 'https://www.tiktok.com/@thandazanindlovuartist', true, true),
-  ('tiktok', 'thandazanindlovuartist', 'placeholder_tiktok_2', 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&q=80&w=400', 'The meaning behind my latest collection explained 🖌️', 876, 65, 'https://www.tiktok.com/@thandazanindlovuartist', true, false)
+  ('instagram', 'gegallery85', 'placeholder_1', '/gginstagram1.jpg', 'Gallery opening this Friday — join us for an evening of art and conversation.', 342, 28, 'https://www.instagram.com/gegallery85', true, true),
+  ('instagram', 'gegallery85', 'placeholder_2', '/gginstagram2.jpg', 'New acquisition just arrived. Contact us to enquire.', 289, 15, 'https://www.instagram.com/gegallery85', true, false),
+  ('instagram', 'gegallery85', 'placeholder_3', '/gginstagram3.jpg', 'Behind the scenes at our latest installation.', 412, 33, 'https://www.instagram.com/gegallery85', true, false),
+  ('instagram', 'thandazanindlovuartist', 'placeholder_4', '/tninstagram1.jpeg', 'Studio session — working on the new series.', 567, 44, 'https://www.instagram.com/thandazanindlovuartist', true, true),
+  ('instagram', 'thandazanindlovuartist', 'placeholder_5', '/tninstagram2.jpg', '"Echoes of the Ancestors" — detail shot. Available at @gegallery85', 892, 71, 'https://www.instagram.com/thandazanindlovuartist', true, false),
+  ('instagram', 'thandazanindlovuartist', 'placeholder_6', '/tninstagram3.jpg', 'Process always tells the story. New work in progress.', 634, 52, 'https://www.instagram.com/thandazanindlovuartist', true, false),
+  ('tiktok', 'thandazanindlovuartist', 'placeholder_tiktok_1', '/tiktok1.jpg', 'Watch me create this piece from start to finish #AfricanArt #ContemporaryArt', 1240, 89, 'https://www.tiktok.com/@thandazanindlovuartist', true, true),
+  ('tiktok', 'thandazanindlovuartist', 'placeholder_tiktok_2', '/tiktok2.jpg', 'The meaning behind my latest collection explained.', 876, 65, 'https://www.tiktok.com/@thandazanindlovuartist', true, false)
 ON CONFLICT (platform, external_id) DO NOTHING;

@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
 import type { Artwork } from '@/types'
@@ -50,11 +51,13 @@ export function ArtworkModal({ artwork, onClose, whatsappNumber = '27660553939' 
               </button>
 
               {/* Image */}
-              <div className="aspect-[3/4] md:aspect-auto overflow-hidden">
-                <img
+              <div className="relative aspect-[3/4] md:aspect-auto overflow-hidden">
+                <Image
                   src={artwork.image_url}
                   alt={artwork.title}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  className="object-cover"
                 />
               </div>
 

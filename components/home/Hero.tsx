@@ -1,8 +1,10 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import type { HomepageSettings } from '@/types'
+import { localMedia } from '@/lib/localMedia'
 
 interface HeroProps {
   settings?: HomepageSettings | null
@@ -17,9 +19,7 @@ export function Hero({ settings }: HeroProps) {
   const title = settings?.hero_title || 'GEGANA'
   const subtitle = settings?.hero_subtitle || 'GALLERY'
   const tagline = settings?.hero_tagline || 'Curating African Art & Contemporary Expression'
-  const bgImage =
-    settings?.hero_image_url ||
-    'https://images.unsplash.com/photo-1544413660-299165566b1d?auto=format&fit=crop&q=80&w=2000'
+  const bgImage = settings?.hero_image_url || localMedia.hero.background
 
   return (
     <section id="home" className="relative min-h-screen bg-ink overflow-hidden flex items-center justify-center pt-20">
@@ -30,7 +30,7 @@ export function Hero({ settings }: HeroProps) {
         <img
           src={bgImage}
           alt="Abstract African Contemporary Art"
-          className="w-full h-full object-cover object-center opacity-30"
+          className="h-full w-full object-cover object-center opacity-30"
         />
         <div className="absolute inset-0 bg-ink/60 mix-blend-multiply" />
       </motion.div>
@@ -40,10 +40,13 @@ export function Hero({ settings }: HeroProps) {
         transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut' }}
         className="absolute top-1/4 left-[10%] w-48 h-64 hidden lg:block z-10"
       >
-        <img
-          src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=600"
+        <Image
+          src={localMedia.hero.floatingLeft}
           alt="Artwork detail"
-          className="w-full h-full object-cover shadow-2xl"
+          fill
+          priority
+          sizes="12rem"
+          className="object-cover shadow-2xl"
         />
       </motion.div>
 
@@ -51,10 +54,13 @@ export function Hero({ settings }: HeroProps) {
         style={{ y: y2 }}
         className="absolute bottom-1/4 right-[10%] w-64 h-80 hidden lg:block z-10"
       >
-        <img
-          src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=600"
+        <Image
+          src={localMedia.hero.floatingRight}
           alt="Artwork detail"
-          className="w-full h-full object-cover shadow-2xl"
+          fill
+          priority
+          sizes="16rem"
+          className="object-cover shadow-2xl"
         />
       </motion.div>
 

@@ -1,16 +1,10 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import type { Artwork } from '@/types'
-
-const FALLBACK_ARTWORKS = [
-  { id: '1', image: 'https://images.unsplash.com/photo-1578301978693-85fa9c026f19?auto=format&fit=crop&q=80&w=800', artist: 'Thandazani Ndlovu', title: 'Echoes of the Ancestors', medium: 'Oil on Canvas', year: 2025, aspect: 'aspect-[3/4]' },
-  { id: '2', image: 'https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?auto=format&fit=crop&q=80&w=800', artist: 'Thandazani Ndlovu', title: 'Urban Rhythm', medium: 'Mixed Media', year: 2024, aspect: 'aspect-square' },
-  { id: '3', image: 'https://images.unsplash.com/photo-1580136608260-4eb11f4b24fe?auto=format&fit=crop&q=80&w=800', artist: 'Thandazani Ndlovu', title: 'Silent Observer', medium: 'Bronze Sculpture', year: 2026, aspect: 'aspect-[4/5]' },
-  { id: '4', image: 'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?auto=format&fit=crop&q=80&w=800', artist: 'Thandazani Ndlovu', title: 'Abstract Landscapes II', medium: 'Acrylic on Linen', year: 2025, aspect: 'aspect-[16/9]' },
-  { id: '5', image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=800', artist: 'Thandazani Ndlovu', title: 'Midnight Sun', medium: 'Oil on Canvas', year: 2024, aspect: 'aspect-[3/4]' },
-]
+import { fallbackArtworks } from '@/lib/localMedia'
 
 interface FeaturedArtworksProps {
   artworks?: Artwork[]
@@ -30,7 +24,7 @@ export function FeaturedArtworks({ artworks }: FeaturedArtworksProps) {
         currency: a.currency,
         availability: a.availability,
       }))
-    : FALLBACK_ARTWORKS
+    : fallbackArtworks
 
   return (
     <section className="bg-bone py-32 px-6 md:px-12">
@@ -65,10 +59,12 @@ export function FeaturedArtworks({ artworks }: FeaturedArtworksProps) {
             >
               <Link href={`/collection?highlight=${artwork.id}`}>
                 <div className={`relative overflow-hidden mb-6 ${artwork.aspect} bg-sand/30`}>
-                  <img
+                  <Image
                     src={artwork.image}
                     alt={artwork.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
                 <div className="space-y-2">

@@ -1,8 +1,10 @@
 'use client'
 
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter'
 import type { HomepageSettings } from '@/types'
+import { localMedia } from '@/lib/localMedia'
 
 interface AboutProps {
   settings?: HomepageSettings | null
@@ -26,12 +28,14 @@ export function About({ settings }: AboutProps) {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 1 }}
-              className="w-full h-full overflow-hidden"
+              className="relative w-full h-full overflow-hidden"
             >
-              <img
-                src="https://images.unsplash.com/photo-1518998053401-b4391cb169cd?auto=format&fit=crop&q=80&w=1200"
+              <Image
+                src={localMedia.social.galleryInstagram[1]}
                 alt="Gallery Interior"
-                className="w-full h-full object-cover"
+                fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover"
               />
             </motion.div>
           </div>

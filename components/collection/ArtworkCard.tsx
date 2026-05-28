@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import type { Artwork } from '@/types'
 import { formatPrice } from '@/lib/utils'
@@ -27,10 +28,13 @@ export function ArtworkCard({ artwork, onClick, index }: ArtworkCardProps) {
       className="group cursor-pointer break-inside-avoid"
     >
       <div className="relative overflow-hidden aspect-[3/4] bg-sand/20 mb-4">
-        <img
+        <Image
           src={artwork.image_url}
           alt={artwork.title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          fill
+          priority={index === 0}
+          sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 flex flex-col justify-end p-6">
           <span className="text-bone font-sans text-xs tracking-widest uppercase opacity-80">

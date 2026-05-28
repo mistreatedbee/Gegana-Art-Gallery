@@ -5,11 +5,12 @@ import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { FilterBar } from '@/components/collection/FilterBar'
 import { CollectionGrid } from '@/components/collection/CollectionGrid'
+import { fallbackCollectionArtworks } from '@/lib/localMedia'
 import type { Artwork, GallerySettings } from '@/types'
 
 export const metadata: Metadata = {
   title: 'Collection',
-  description: 'Explore the full Gegana Gallery collection — contemporary African art by Thandazani Ndlovu and more. Filter by category, availability, and price.',
+  description: 'Explore the full Gegana Gallery collection - contemporary African art by Thandazani Ndlovu and more. Filter by category, availability, and price.',
 }
 
 interface PageProps {
@@ -29,7 +30,11 @@ export default async function CollectionPage({ searchParams }: PageProps) {
     gallerySettings = settingsRes.data
     artworks = artworksRes.data || []
   } catch {
-    // DB not connected yet — show empty state
+    // DB not connected yet - show local gallery assets.
+  }
+
+  if (artworks.length === 0) {
+    artworks = fallbackCollectionArtworks
   }
 
   return (
@@ -38,7 +43,6 @@ export default async function CollectionPage({ searchParams }: PageProps) {
 
       <div className="pt-32 pb-20 px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
           <div className="mb-16">
             <span className="text-ink/50 font-sans text-xs tracking-[0.3em] uppercase block mb-4">
               Works
@@ -51,13 +55,11 @@ export default async function CollectionPage({ searchParams }: PageProps) {
             </p>
           </div>
 
-          {/* Filters */}
           <Suspense>
             <FilterBar />
           </Suspense>
 
-          {/* Grid */}
-          <Suspense fallback={<div className="text-ink/40 font-sans text-sm py-20 text-center">Loading collection…</div>}>
+          <Suspense fallback={<div className="text-ink/40 font-sans text-sm py-20 text-center">Loading collection...</div>}>
             <CollectionGrid
               artworks={artworks}
               searchParams={searchParams}

@@ -1,13 +1,15 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import type { Exhibition } from '@/types'
+import { localMedia } from '@/lib/localMedia'
 
 const FALLBACK: Exhibition[] = [
-  { id: '1', title: 'Voices of the Soil', start_date: '2026-10-15', end_date: '2026-11-30', location: 'Main Gallery, Johannesburg', description: 'A group exhibition exploring our deep connection to the earth through contemporary sculpture and mixed media.', image_url: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&q=80&w=800', status: 'Current', is_active: true, sort_order: 1, created_at: '' },
-  { id: '2', title: 'Thandazani Ndlovu: Retrospective', start_date: '2026-12-05', end_date: '2027-01-20', location: 'West Wing, Johannesburg', description: "An immersive journey through a decade of Ndlovu's groundbreaking work in abstract expressionism.", image_url: 'https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?auto=format&fit=crop&q=80&w=800', status: 'Upcoming', is_active: true, sort_order: 2, created_at: '' },
-  { id: '3', title: 'Urban Geometries', start_date: '2027-02-01', end_date: '2027-03-15', location: 'Project Space', description: 'Emerging artists interpreting the modern African metropolis through stark lines and bold colors.', image_url: 'https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?auto=format&fit=crop&q=80&w=800', status: 'Upcoming', is_active: true, sort_order: 3, created_at: '' },
+  { id: '1', title: 'Voices of the Soil', start_date: '2026-10-15', end_date: '2026-11-30', location: 'Main Gallery, Johannesburg', description: 'A group exhibition exploring our deep connection to the earth through contemporary sculpture and mixed media.', image_url: localMedia.artworks.africanArt[2], status: 'Current', is_active: true, sort_order: 1, created_at: '' },
+  { id: '2', title: 'Thandazani Ndlovu: Retrospective', start_date: '2026-12-05', end_date: '2027-01-20', location: 'West Wing, Johannesburg', description: "An immersive journey through a decade of Ndlovu's groundbreaking work in abstract expressionism.", image_url: localMedia.artworks.portraits[3], status: 'Upcoming', is_active: true, sort_order: 2, created_at: '' },
+  { id: '3', title: 'Urban Geometries', start_date: '2027-02-01', end_date: '2027-03-15', location: 'Project Space', description: 'Emerging artists interpreting the modern African metropolis through stark lines and bold colors.', image_url: localMedia.artworks.abstract[0], status: 'Upcoming', is_active: true, sort_order: 3, created_at: '' },
 ]
 
 function getStatus(ex: Exhibition): string {
@@ -60,10 +62,12 @@ export function Exhibitions({ exhibitions }: ExhibitionsProps) {
               className="group cursor-pointer flex flex-col h-full"
             >
               <div className="relative aspect-[4/3] overflow-hidden mb-8">
-                <img
-                  src={exhibition.image_url || ''}
+                <Image
+                  src={exhibition.image_url || localMedia.hero.background}
                   alt={exhibition.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  fill
+                  sizes="(min-width: 768px) 33vw, 100vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-ink/0 group-hover:bg-ink/20 transition-colors duration-500" />
                 <div className="absolute top-4 left-4 bg-bone px-4 py-1 text-ink font-sans text-xs tracking-widest uppercase">

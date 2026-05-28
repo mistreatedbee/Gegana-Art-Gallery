@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { createServerDbClient } from '@/lib/db/server'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
+import { localMedia } from '@/lib/localMedia'
 import type { Exhibition, GallerySettings } from '@/types'
 
 export const metadata: Metadata = {
@@ -56,10 +58,12 @@ export default async function ExhibitionsPage() {
             return (
               <div key={ex.id} className="group cursor-pointer flex flex-col">
                 <div className="relative aspect-[4/3] overflow-hidden mb-6">
-                  <img
-                    src={ex.image_url || ''}
+                  <Image
+                    src={ex.image_url || localMedia.hero.background}
                     alt={ex.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute top-4 left-4">
                     <span className={`text-xs font-sans tracking-widest uppercase px-3 py-1 ${statusColor[status as keyof typeof statusColor] || ''}`}>

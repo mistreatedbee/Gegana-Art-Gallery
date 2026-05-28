@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import { createServerDbClient } from '@/lib/db/server'
 import { notFound } from 'next/navigation'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { ArtworkCard } from '@/components/collection/ArtworkCard'
+import { localMedia } from '@/lib/localMedia'
 import type { Artist, Artwork, GallerySettings } from '@/types'
 
 interface PageProps {
@@ -73,10 +75,14 @@ export default async function ArtistPage({ params }: PageProps) {
               )}
             </div>
           </div>
-          <div className="aspect-[3/4] overflow-hidden">
-            {artist.photo_url && (
-              <img src={artist.photo_url} alt={artist.name} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
-            )}
+          <div className="relative aspect-[3/4] overflow-hidden">
+            <Image
+              src={artist.photo_url || localMedia.artist.portrait}
+              alt={artist.name}
+              fill
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="object-cover grayscale hover:grayscale-0 transition-all duration-1000"
+            />
           </div>
         </div>
       </div>

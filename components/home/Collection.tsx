@@ -1,9 +1,11 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Artwork } from '@/types'
+import { localMedia } from '@/lib/localMedia'
 
 const CATEGORIES = ['All', 'Paintings', 'Abstract', 'African Art', 'Portraits', 'Contemporary', 'Mixed Media']
 
@@ -17,14 +19,14 @@ export function Collection({ artworks }: CollectionProps) {
   const items = artworks?.length
     ? artworks
     : [
-        { id: '1', title: 'Golden Hour', category: 'Paintings', image_url: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=600' },
-        { id: '2', title: 'Ancestral Lines', category: 'African Art', image_url: 'https://images.unsplash.com/photo-1544413660-299165566b1d?auto=format&fit=crop&q=80&w=600' },
-        { id: '3', title: 'Urban Chaos', category: 'Abstract', image_url: 'https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?auto=format&fit=crop&q=80&w=600' },
-        { id: '4', title: 'Silent Observer', category: 'Contemporary', image_url: 'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?auto=format&fit=crop&q=80&w=600' },
-        { id: '5', title: 'Texture Study I', category: 'Mixed Media', image_url: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=600' },
-        { id: '6', title: 'Midnight Sun', category: 'Paintings', image_url: 'https://images.unsplash.com/photo-1578301978693-85fa9c026f19?auto=format&fit=crop&q=80&w=600' },
-        { id: '7', title: 'The Gathering', category: 'African Art', image_url: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&q=80&w=600' },
-        { id: '8', title: 'Form & Void', category: 'Contemporary', image_url: 'https://images.unsplash.com/photo-1580136608260-4eb11f4b24fe?auto=format&fit=crop&q=80&w=600' },
+        { id: '1', title: 'Golden Hour', category: 'Portraits', image_url: localMedia.artworks.portraits[1] },
+        { id: '2', title: 'Ancestral Lines', category: 'African Art', image_url: localMedia.artworks.africanArt[1] },
+        { id: '3', title: 'Urban Chaos', category: 'Abstract', image_url: localMedia.artworks.abstract[0] },
+        { id: '4', title: 'Silent Observer', category: 'Portraits', image_url: localMedia.artworks.portraits[2] },
+        { id: '5', title: 'Texture Study I', category: 'Mixed Media', image_url: localMedia.artworks.mixedMedia[1] },
+        { id: '6', title: 'Midnight Sun', category: 'Mixed Media', image_url: localMedia.artworks.mixedMedia[2] },
+        { id: '7', title: 'The Gathering', category: 'African Art', image_url: localMedia.artworks.africanArt[2] },
+        { id: '8', title: 'Form & Void', category: 'Mixed Media', image_url: localMedia.artworks.mixedMedia[3] },
       ]
 
   const filtered =
@@ -80,11 +82,16 @@ export function Collection({ artworks }: CollectionProps) {
                 key={item.id}
                 className="relative w-[300px] md:w-[400px] aspect-[3/4] snap-center group cursor-pointer"
               >
-                <Link href={`/collection?category=${encodeURIComponent((item as { category?: string }).category || 'All')}`}>
-                  <img
+                <Link
+                  href={`/collection?category=${encodeURIComponent((item as { category?: string }).category || 'All')}`}
+                  className="relative block h-full w-full"
+                >
+                  <Image
                     src={(item as { image_url: string }).image_url}
                     alt={(item as { title: string }).title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    fill
+                    sizes="(min-width: 768px) 400px, 300px"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
                     <span className="text-gold font-sans text-xs tracking-widest uppercase mb-2">
