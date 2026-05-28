@@ -3,6 +3,30 @@ import type { SocialPost } from '@/types'
 const GRAPH_API = 'https://graph.instagram.com'
 const MEDIA_FIELDS = 'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,like_count,comments_count'
 
+// Extract shortcode from any Instagram post URL
+// Handles: /p/, /reel/, /tv/ formats
+export function extractInstagramShortcode(url: string): string | null {
+  const match = url.match(/instagram\.com\/(?:p|reel|tv)\/([A-Za-z0-9_-]+)/)
+  return match ? match[1] : null
+}
+
+// Try to fetch a thumbnail for an Instagram post URL
+// Requires INSTAGRAM_APP_TOKEN env var in format APP_ID|CLIENT_TOKEN
+// Returns null silently if token not set or request fails
+export async function fetchInstagramOEmbedThumb(url: string): Promise<string | null> {
+  const appToken = process.env.INSTAGRAM_APP_TOKEN
+  if (!appToken) return null
+  try {
+    const apiUrl = `https://graph.facebook.com/v18.0/instagram_oembed?url=${encodeURIComponent(url)}&fields=thumbnail_url&access_token=${appToken}`
+    const res = await fetch(apiUrl, { next: { revalidate: 3600 } })
+    if (!res.ok) return null
+    const data = await res.json()
+    return data.thumbnail_url || null
+  } catch {
+    return null
+  }
+}
+
 export async function fetchInstagramPosts(
   accessToken: string,
   accountHandle: string,

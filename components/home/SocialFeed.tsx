@@ -1,9 +1,11 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Heart, MessageCircle, Play, ExternalLink } from 'lucide-react'
+import { Heart, MessageCircle, Play, ExternalLink, Maximize2 } from 'lucide-react'
 import type { SocialPost } from '@/types'
 import { truncate } from '@/lib/utils'
+import { PostViewerModal } from '@/components/social/PostViewerModal'
 
 interface SocialFeedProps {
   galleryPosts?: SocialPost[]
@@ -11,60 +13,86 @@ interface SocialFeedProps {
   tiktokPosts?: SocialPost[]
 }
 
-function PostCard({ post }: { post: SocialPost }) {
+function PostCard({ post, onClick }: { post: SocialPost; onClick: (p: SocialPost) => void }) {
+  const isRealPost = !post.external_id.startsWith('placeholder') && !['p1','p2','p3','p4','a1','a2','a3','a4','t1','t2','t3','t4'].includes(post.external_id)
+
   return (
-    <motion.a
-      href={post.permalink}
-      target="_blank"
-      rel="noreferrer"
+    <motion.div
+      onClick={() => isRealPost ? onClick(post) : window.open(post.permalink, '_blank')}
       initial={{ opacity: 0, scale: 0.95 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
-      className="relative group overflow-hidden bg-sand block"
+      className="relative group overflow-hidden bg-sand block cursor-pointer"
     >
       <div className="aspect-square relative">
         <img
           src={post.media_url}
-          alt={post.caption || 'Instagram post'}
+          alt={post.caption || 'Social post'}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          onError={(e) => {
+            // Fallback if media_url fails to load
+            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1544413660-299165566b1d?auto=format&fit=crop&q=80&w=400'
+          }}
         />
+
+        {/* TikTok play icon */}
         {post.platform === 'tiktok' && (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="w-12 h-12 rounded-full bg-bone/20 backdrop-blur-sm border border-bone/30 flex items-center justify-center">
               <Play size={20} className="text-bone ml-1" fill="currentColor" />
             </div>
           </div>
         )}
-        <div className="absolute inset-0 bg-ink/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-          <div className="flex items-center gap-4 text-bone mb-2">
-            {post.likes_count > 0 && (
-              <div className="flex items-center gap-1">
-                <Heart size={14} fill="currentColor" />
-                <span className="font-sans text-xs">{post.likes_count}</span>
+
+        {/* Hover overlay */}
+        <div className="absolute inset-0 bg-ink/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-4">
+          <div className="flex justify-end">
+            {isRealPost ? (
+              <div className="bg-bone/20 backdrop-blur-sm border border-bone/30 p-1.5">
+                <Maximize2 size={14} className="text-bone" />
               </div>
-            )}
-            {post.comments_count > 0 && (
-              <div className="flex items-center gap-1">
-                <MessageCircle size={14} fill="currentColor" />
-                <span className="font-sans text-xs">{post.comments_count}</span>
-              </div>
-            )}
-            {post.views_count > 0 && (
-              <div className="flex items-center gap-1">
-                <Play size={14} fill="currentColor" />
-                <span className="font-sans text-xs">{post.views_count.toLocaleString()}</span>
+            ) : (
+              <div className="bg-bone/20 backdrop-blur-sm border border-bone/30 p-1.5">
+                <ExternalLink size={14} className="text-bone" />
               </div>
             )}
           </div>
-          {post.caption && (
-            <p className="text-bone/80 font-sans text-xs leading-relaxed line-clamp-2">
-              {truncate(post.caption, 80)}
-            </p>
-          )}
+          <div>
+            <div className="flex items-center gap-4 text-bone mb-2">
+              {post.likes_count > 0 && (
+                <div className="flex items-center gap-1">
+                  <Heart size={14} fill="currentColor" />
+                  <span className="font-sans text-xs">{post.likes_count.toLocaleString()}</span>
+                </div>
+              )}
+              {post.comments_count > 0 && (
+                <div className="flex items-center gap-1">
+                  <MessageCircle size={14} fill="currentColor" />
+                  <span className="font-sans text-xs">{post.comments_count.toLocaleString()}</span>
+                </div>
+              )}
+              {post.views_count > 0 && (
+                <div className="flex items-center gap-1">
+                  <Play size={14} fill="currentColor" />
+                  <span className="font-sans text-xs">{post.views_count.toLocaleString()}</span>
+                </div>
+              )}
+            </div>
+            {post.caption && (
+              <p className="text-bone/80 font-sans text-xs leading-relaxed line-clamp-2">
+                {truncate(post.caption, 80)}
+              </p>
+            )}
+            {!isRealPost && (
+              <p className="text-gold font-sans text-[10px] tracking-widest uppercase mt-1">
+                Add real posts via Admin →
+              </p>
+            )}
+          </div>
         </div>
       </div>
-    </motion.a>
+    </motion.div>
   )
 }
 
@@ -90,105 +118,84 @@ const PLACEHOLDER_TIKTOK: SocialPost[] = [
 ]
 
 export function SocialFeed({ galleryPosts, artistPosts, tiktokPosts }: SocialFeedProps) {
+  const [selectedPost, setSelectedPost] = useState<SocialPost | null>(null)
+
   const gallery = galleryPosts?.length ? galleryPosts : PLACEHOLDER_GALLERY
   const artist = artistPosts?.length ? artistPosts : PLACEHOLDER_ARTIST
   const tiktok = tiktokPosts?.length ? tiktokPosts : PLACEHOLDER_TIKTOK
 
+  function FeedSection({
+    title,
+    handle,
+    platform,
+    posts,
+    followUrl,
+  }: {
+    title: string
+    handle: string
+    platform: string
+    posts: SocialPost[]
+    followUrl: string
+  }) {
+    return (
+      <div>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6"
+        >
+          <div>
+            <span className="text-ink/50 font-sans text-xs tracking-[0.3em] uppercase block mb-3">{platform}</span>
+            <h2 className="text-ink font-serif text-4xl md:text-5xl">{title}</h2>
+            <p className="text-ink/50 font-sans text-sm mt-2">@{handle}</p>
+          </div>
+          <a
+            href={followUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 bg-ink text-bone px-6 py-2 font-sans text-xs tracking-widest uppercase hover:bg-ink/80 transition-colors"
+          >
+            Follow <ExternalLink size={12} />
+          </a>
+        </motion.div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-3">
+          {posts.slice(0, 8).map((post) => (
+            <PostCard key={post.id} post={post} onClick={setSelectedPost} />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <section className="bg-bone py-32 px-6 md:px-12">
       <div className="max-w-7xl mx-auto space-y-24">
-
-        {/* Gallery Instagram */}
-        <div>
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6"
-          >
-            <div>
-              <span className="text-ink/50 font-sans text-xs tracking-[0.3em] uppercase block mb-3">Social</span>
-              <h2 className="text-ink font-serif text-4xl md:text-5xl">Gegana Gallery</h2>
-              <p className="text-ink/50 font-sans text-sm mt-2">@gegallery85 on Instagram</p>
-            </div>
-            <a
-              href="https://www.instagram.com/gegallery85"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 bg-ink text-bone px-6 py-2 font-sans text-xs tracking-widest uppercase hover:bg-ink/80 transition-colors"
-            >
-              Follow <ExternalLink size={12} />
-            </a>
-          </motion.div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-3">
-            {gallery.slice(0, 4).map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
-          </div>
-        </div>
-
-        {/* Artist Instagram */}
-        <div>
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6"
-          >
-            <div>
-              <span className="text-ink/50 font-sans text-xs tracking-[0.3em] uppercase block mb-3">Artist Feed</span>
-              <h2 className="text-ink font-serif text-4xl md:text-5xl">Thandazani Ndlovu</h2>
-              <p className="text-ink/50 font-sans text-sm mt-2">@thandazanindlovuartist on Instagram</p>
-            </div>
-            <a
-              href="https://www.instagram.com/thandazanindlovuartist"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 bg-ink text-bone px-6 py-2 font-sans text-xs tracking-widest uppercase hover:bg-ink/80 transition-colors"
-            >
-              Follow <ExternalLink size={12} />
-            </a>
-          </motion.div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-3">
-            {artist.slice(0, 4).map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
-          </div>
-        </div>
-
-        {/* TikTok */}
-        <div>
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6"
-          >
-            <div>
-              <span className="text-ink/50 font-sans text-xs tracking-[0.3em] uppercase block mb-3">TikTok</span>
-              <h2 className="text-ink font-serif text-4xl md:text-5xl">Watch the Process</h2>
-              <p className="text-ink/50 font-sans text-sm mt-2">@thandazanindlovuartist on TikTok</p>
-            </div>
-            <a
-              href="https://www.tiktok.com/@thandazanindlovuartist"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 bg-ink text-bone px-6 py-2 font-sans text-xs tracking-widest uppercase hover:bg-ink/80 transition-colors"
-            >
-              Follow <ExternalLink size={12} />
-            </a>
-          </motion.div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-3">
-            {tiktok.slice(0, 4).map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
-          </div>
-        </div>
-
+        <FeedSection
+          title="Gegana Gallery"
+          handle="gegallery85"
+          platform="Instagram"
+          posts={gallery}
+          followUrl="https://www.instagram.com/gegallery85"
+        />
+        <FeedSection
+          title="Thandazani Ndlovu"
+          handle="thandazanindlovuartist"
+          platform="Artist Instagram"
+          posts={artist}
+          followUrl="https://www.instagram.com/thandazanindlovuartist"
+        />
+        <FeedSection
+          title="Watch the Process"
+          handle="thandazanindlovuartist"
+          platform="TikTok"
+          posts={tiktok}
+          followUrl="https://www.tiktok.com/@thandazanindlovuartist"
+        />
       </div>
+
+      <PostViewerModal post={selectedPost} onClose={() => setSelectedPost(null)} />
     </section>
   )
 }

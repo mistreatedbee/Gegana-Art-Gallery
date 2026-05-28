@@ -17,6 +17,10 @@ export function SocialMediaManager({ posts: initial, tokens }: SocialMediaManage
   const [tiktokUrls, setTiktokUrls] = useState('')
   const [addingTiktok, setAddingTiktok] = useState(false)
   const [addingTiktokLoading, setAddingTiktokLoading] = useState(false)
+  const [instagramUrls, setInstagramUrls] = useState('')
+  const [instagramHandle, setInstagramHandle] = useState<'gegallery85' | 'thandazanindlovuartist'>('thandazanindlovuartist')
+  const [addingInstagram, setAddingInstagram] = useState(false)
+  const [addingInstagramLoading, setAddingInstagramLoading] = useState(false)
 
   const galleryToken = tokens.find((t) => t.account_handle === 'gegallery85')
   const artistToken = tokens.find((t) => t.account_handle === 'thandazanindlovuartist')
@@ -53,6 +57,27 @@ export function SocialMediaManager({ posts: initial, tokens }: SocialMediaManage
     if (!confirm('Remove this post?')) return
     const res = await fetch(`/api/social/posts/${id}`, { method: 'DELETE' })
     if (res.ok) setPosts((prev) => prev.filter((p) => p.id !== id))
+  }
+
+  async function addInstagramPosts() {
+    const urls = instagramUrls.split('\n').map((u) => u.trim()).filter(Boolean)
+    if (urls.length === 0) return
+    setAddingInstagramLoading(true)
+    const res = await fetch('/api/social/instagram/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ urls, account_handle: instagramHandle }),
+    })
+    const data = await res.json()
+    if (res.ok) {
+      alert(`${data.message}`)
+      setInstagramUrls('')
+      setAddingInstagram(false)
+      window.location.reload()
+    } else {
+      alert(data.error || 'Failed to add Instagram posts')
+    }
+    setAddingInstagramLoading(false)
   }
 
   async function addTiktokPosts() {
@@ -115,6 +140,56 @@ export function SocialMediaManager({ posts: initial, tokens }: SocialMediaManage
             )}
           </div>
         ))}
+      </div>
+
+      {/* Add Instagram Posts by URL */}
+      <div className="bg-ink/40 border border-white/10 p-5">
+        <div className="flex justify-between items-center mb-3">
+          <div>
+            <h3 className="text-bone font-serif text-lg">Add Instagram Posts</h3>
+            <p className="text-bone/40 font-sans text-xs mt-1">Paste post URLs — visitors will see the real posts on the website without leaving</p>
+          </div>
+          <button onClick={() => setAddingInstagram(!addingInstagram)} className="flex items-center gap-2 text-gold font-sans text-xs tracking-widest uppercase">
+            <Plus size={14} /> Add Posts
+          </button>
+        </div>
+        {addingInstagram && (
+          <div className="space-y-3">
+            <div className="flex gap-3 items-center">
+              <label className="text-bone/50 font-sans text-xs tracking-widest uppercase">Account:</label>
+              <select
+                value={instagramHandle}
+                onChange={(e) => setInstagramHandle(e.target.value as 'gegallery85' | 'thandazanindlovuartist')}
+                className="bg-ink/60 border border-white/10 text-bone font-sans text-sm px-3 py-2 focus:outline-none focus:border-gold"
+              >
+                <option value="gegallery85">@gegallery85 (Gallery)</option>
+                <option value="thandazanindlovuartist">@thandazanindlovuartist (Artist)</option>
+              </select>
+            </div>
+            <textarea
+              rows={6}
+              value={instagramUrls}
+              onChange={(e) => setInstagramUrls(e.target.value)}
+              placeholder={`Paste Instagram post URLs, one per line\nhttps://www.instagram.com/p/ABC123xyz/\nhttps://www.instagram.com/reel/DEF456uvw/`}
+              className="w-full bg-ink/60 border border-white/10 text-bone font-sans text-sm px-4 py-3 focus:outline-none focus:border-gold resize-none placeholder:text-bone/20"
+            />
+            <p className="text-bone/30 font-sans text-xs">
+              How to get the URL: Open a post on Instagram → tap ··· → Copy Link
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={addInstagramPosts}
+                disabled={addingInstagramLoading}
+                className="bg-gold text-ink px-6 py-2 font-sans text-xs tracking-widest uppercase hover:bg-gold/80 disabled:opacity-50"
+              >
+                {addingInstagramLoading ? 'Adding…' : 'Add to Website'}
+              </button>
+              <button onClick={() => setAddingInstagram(false)} className="border border-white/20 text-bone/50 px-6 py-2 font-sans text-xs tracking-widest uppercase">
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Add TikTok Posts */}
